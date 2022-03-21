@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('country', 'App\Http\Controllers\Country\CountryController@country');
-Route::get('country/{id}', 'App\Http\Controllers\Country\CountryController@countryByID');
-Route::post('country', 'App\Http\Controllers\Country\CountryController@countrySave');
+Route::get('employer', 'App\Http\Controllers\Employer\EmployerController@employer');
+Route::get('employer/{id}', 'App\Http\Controllers\Employer\EmployerController@employerByID');
+Route::post('employer', 'App\Http\Controllers\Employer\EmployerController@employerSave');
 
