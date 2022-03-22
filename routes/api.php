@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CvController;
+use App\Http\Controllers\Offre\OffreController;
+use App\Http\Controllers\AuthApi\AuthController;
+use App\Http\Controllers\Employer\EmployerController;
+use App\Http\Controllers\Employeur\EmployeurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,32 +19,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//User Auth routes
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+// Route::post('register', 'App\Http\Controllers\AuthApi\AuthController@regiter);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 //employers routes
-Route::get('getEmployers', 'App\Http\Controllers\Employer\EmployerController@getEmployers');
-Route::get('getEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@getEmployerByID');
-Route::post('createEmployer', 'App\Http\Controllers\Employer\EmployerController@createEmployer');
-Route::put('updateEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@updateEmployer');
-Route::delete('deleteEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@deleteEmployer');
+Route::get('getEmployers', [EmployerController::class, 'getEmployers']);
+Route::get('getEmployer/{id}', [EmployerController::class, 'getEmployerByID']);
+Route::post('createEmployer', [EmployerController::class, 'createEmployer']);
+Route::put('updateEmployer/{id}', [EmployerController::class, 'updateEmployer']);
+Route::delete('deleteEmployer/{id}', [EmployerController::class, 'deleteEmployer']);
 
 //employeurs routes
-Route::get('getEmployeurs', 'App\Http\Controllers\Employeur\EmployeurController@getEmployeurs');
-Route::get('getEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@getEmployeurByID');
-Route::post('createEmployeur', 'App\Http\Controllers\Employeur\EmployeurController@createEmployeur');
-Route::put('updateEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@updateEmployeur');
-Route::delete('deleteEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@deleteEmployeur');
+Route::get('getEmployeurs', [EmployeurController::class, 'getEmployeurs']);
+Route::get('getEmployeur/{id}', [EmployeurController::class, 'getEmployeurByID']);
+Route::post('createEmployeur', [EmployeurController::class, 'createEmployeur']);
+Route::put('updateEmployeur/{id}', [EmployeurController::class, 'updateEmployeur']);
+Route::delete('deleteEmployeur/{id}', [EmployeurController::class, 'deleteEmployeur']);
 
 //employeurs routes
-Route::get('getOffres', 'App\Http\Controllers\Offre\OffreController@getOffres');
-Route::get('getOffre/{id}', 'App\Http\Controllers\Offre\OffreController@getOffreByID');
-Route::post('createOffre', 'App\Http\Controllers\Offre\OffreController@createOffre');
-Route::put('updateOffre/{id}', 'App\Http\Controllers\Offre\OffreController@updateOffre');
-Route::delete('deleteOffre/{id}', 'App\Http\Controllers\Offre\OffreController@deleteOffre');
+Route::get('getOffres', [OffreController::class, 'getOffres']);
+Route::get('getOffre/{id}', [OffreController::class, 'getOffreByID']);
+Route::post('createOffre', [OffreController::class, 'createOffre']);
+Route::put('updateOffre/{id}', [OffreController::class, 'updateOffre']);
+Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
 
 
 //cv Routes
-Route::get('cv/download', 'App\Http\Controllers\CvController@download');
-Route::post('cv/upload', 'App\Http\Controllers\CvController@upload');
+Route::get('cv/download', [CvController::class, 'download']);
+Route::post('cv/upload', [CvController::class, 'upload']);
