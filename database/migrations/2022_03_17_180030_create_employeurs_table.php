@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('nom');
             $table->text('description');
-            $table->text('Secteur d\'activité');
+            $table->text('Secteur_activité');
             $table->string('ville');
             $table->timestamps();
         

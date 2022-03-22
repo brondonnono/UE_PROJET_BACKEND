@@ -18,7 +18,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('employer', 'App\Http\Controllers\Employer\EmployerController@employer');
-Route::get('employer/{id}', 'App\Http\Controllers\Employer\EmployerController@employerByID');
-Route::post('employer', 'App\Http\Controllers\Employer\EmployerController@employerSave');
+//employers routes
+Route::get('getEmployers', 'App\Http\Controllers\Employer\EmployerController@getEmployers');
+Route::get('getEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@getEmployerByID');
+Route::post('createEmployer', 'App\Http\Controllers\Employer\EmployerController@createEmployer');
+Route::put('updateEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@updateEmployer');
+Route::delete('deleteEmployer/{id}', 'App\Http\Controllers\Employer\EmployerController@deleteEmployer');
 
+//employeurs routes
+Route::get('getEmployeurs', 'App\Http\Controllers\Employeur\EmployeurController@getEmployeurs');
+Route::get('getEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@getEmployeurByID');
+Route::post('createEmployeur', 'App\Http\Controllers\Employeur\EmployeurController@createEmployeur');
+Route::put('updateEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@updateEmployeur');
+Route::delete('deleteEmployeur/{id}', 'App\Http\Controllers\Employeur\EmployeurController@deleteEmployeur');
+
+//employeurs routes
+Route::get('getOffres', 'App\Http\Controllers\Offre\OffreController@getOffres');
+Route::get('getOffre/{id}', 'App\Http\Controllers\Offre\OffreController@getOffreByID');
+Route::post('createOffre', 'App\Http\Controllers\Offre\OffreController@createOffre');
+Route::put('updateOffre/{id}', 'App\Http\Controllers\Offre\OffreController@updateOffre');
+Route::delete('deleteOffre/{id}', 'App\Http\Controllers\Offre\OffreController@deleteOffre');
+
+
+//cv Routes
+Route::get('cv/download', 'App\Http\Controllers\CvController@download');
+Route::post('cv/upload', 'App\Http\Controllers\CvController@upload');
