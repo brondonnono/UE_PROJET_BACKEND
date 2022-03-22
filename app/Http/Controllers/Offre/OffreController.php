@@ -36,10 +36,12 @@ class OffreController extends Controller
     public function createOffre(Request $request)
     {
         $rules = [
-            'Secteur_activité' => 'required',
-            'user_id' => 'required',
-            'Description' => 'required',
-            'ville' => 'required'
+            'posteVise' => 'required',
+            'employeur_id' => 'required',
+            'description' => 'required',
+            'competencesRequises' => 'required',
+            'typeOffre' => 'required',
+            'dateExpiration' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
