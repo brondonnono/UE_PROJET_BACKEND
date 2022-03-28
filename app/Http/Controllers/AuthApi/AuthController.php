@@ -68,4 +68,13 @@ class AuthController extends Controller
             }
         }
     }
+
+    public function logout() {
+        auth()->user()->tokens()->delete();
+        return response()->json([
+            'status' => '200',
+            'message' => 'Déconnexion réuissie'
+        ]);
+    }
+
 }
