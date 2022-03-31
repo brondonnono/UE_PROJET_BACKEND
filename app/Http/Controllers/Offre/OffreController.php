@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Offre;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\OffreModel;
 
 class OffreController extends Controller

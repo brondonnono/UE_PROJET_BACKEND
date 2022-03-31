@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employeur;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\EmployeurModel;
 
@@ -38,7 +39,7 @@ class EmployeurController extends Controller
         $rules = [
             'Secteur_activité' => 'required',
             'user_id' => 'required',
-            'Description' => 'required',
+            'description' => 'required',
             'ville' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);

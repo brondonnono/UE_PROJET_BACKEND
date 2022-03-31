@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Employer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use \stdClass;
 
+use App\Http\Controllers\Utils\utilController;
+use App\Http\Controllers\Offre\OffreController;
 use App\Models\EmployerModel;
 
 class EmployerController extends Controller
@@ -60,6 +63,38 @@ class EmployerController extends Controller
         }
         $employer->delete();
         return response()->json(["message" => "Employé supprimé avec succès. Veuillez supprimer aussi son compte utilisateur"], 200);
+    }
+
+    public function getRecommandedOffresForUser(Request $request, $id) {
+        $recommandationOffres = array();
+        $employer = new \stdClass();
+        $user = $this->getEmployerByID($id)->getData();
+        $employer->competences = (new utilController)->makeCompetenceArrayFormString($user->competences);
+        $employer->nom = $user->nom;
+        $employer->id = $user->id;
+        $offre = (new OffreController)->getOffres()->getData();
+        
+        for ($i=0; $i < sizeof($offre->data); $i++) {
+            $offre->data[$i]->competencesRequises = (new utilController)->makeCompetenceArrayFormString($offre->data[$i]->competencesRequises);
+        }
+
+        for ($i=0; $i < sizeof($employer->competences); $i++) {
+            for ($j=0; $j < sizeof($offre->data); $j++) { 
+                for ($k=0; $k < sizeof($offre->data[$j]->competencesRequises); $k++) { 
+                    if($employer->competences[$i] === $offre->data[$j]->competencesRequises[$k]) {
+                        $result = new stdClass();
+                        $result->user_id = $employer->id;
+                        $result->user_competences = $employer->competences;
+                        $result->offre_id = $offre->data[$j]->id;
+                        $result->offre_competences = $offre->data[$j]->competencesRequises;
+                        $resultJSON = response()->json($result)->getData();
+                        $recommandationOffres[$j] = $resultJSON;
+                    }
+                }
+            }
+        }
+        
+        return $recommandationOffres;
     }
 }
  
