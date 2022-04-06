@@ -63,6 +63,7 @@ class AuthController extends Controller
                     'status' => '200',
                     'username' => $user->name,
                     'token' => $token,
+                    'type' => $user->type,
                     'id' => $user->id,
                     'message' => 'Connexion réuissie'
                 ]);
