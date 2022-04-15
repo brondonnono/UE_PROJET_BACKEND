@@ -17,7 +17,7 @@ class utilController extends Controller
         return $result;
     }
 
-    public function makeCompetenceArrayFormString($competences) {
+    public function makeCompetenceArrayFromString($competences) {
        return explode(';', $competences);
     }
 }

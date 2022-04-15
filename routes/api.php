@@ -5,8 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\Offre\OffreController;
 use App\Http\Controllers\AuthApi\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Employeur\EmployeurController;
+use App\Http\Controllers\OfferRejectedController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +30,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+Route::post('password/forgot', [ForgotPasswordController::class, 'forgotPassword']);
+
+
+Route::post('password/reset', [ResetPasswordController::class, 'sendResetResponse']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -36,21 +45,39 @@ Route::get('getRecommandedOffres/{id}', [EmployerController::class, 'getRecomman
 
 //employers routes
 Route::get('getEmployers', [EmployerController::class, 'getEmployers']);
-Route::get('getEmployer/{id}', [EmployerController::class, 'getEmployerByID']);
+Route::get('getEmployerByUserId/{id}', [EmployerController::class, 'getEmployerByUserID']);
+Route::get('getEmployerByID/{id}', [EmployerController::class, 'getEmployerByID']);
 Route::post('createEmployer', [EmployerController::class, 'createEmployer']);
 Route::put('updateEmployer/{id}', [EmployerController::class, 'updateEmployer']);
 Route::delete('deleteEmployer/{id}', [EmployerController::class, 'deleteEmployer']);
 
+//candidate routes
+Route::post('createCandidate', [EmployerController::class, 'createCandidate']);
+Route::get('getCandidateByID/{id}', [EmployerController::class, 'getCandidateByID']);
+Route::get('getCandidateByOffreID/{id}', [EmployerController::class, 'getCandidateByOffreID']);
+Route::get('getCandidates', [EmployerController::class, 'getCandidates']);
+Route::delete('deleteCandidate/{id}', [EmployerController::class, 'deleteCandidate']);
+
+//offerRejected routes
+Route::post('createOfferRejected', [OfferRejectedController::class, 'createOfferRejected']);
+Route::get('getOfferRejectedByID/{id}', [OfferRejectedController::class, 'getOfferRejectedByID']);
+Route::get('getOfferRejectedByEmployerID/{id}', [OfferRejectedController::class, 'getOfferRejectedByEmployerID']);
+Route::get('getOffersRejected', [OfferRejectedController::class, 'getOffersRejected']);
+Route::delete('deleteOfferRejected/{id}', [OfferRejectedController::class, 'deleteOfferRejected']);
+
 //employeurs routes
 Route::get('getEmployeurs', [EmployeurController::class, 'getEmployeurs']);
+Route::get('getEmployeurByUserId/{id}', [EmployeurController::class, 'getEmployeurByUserID']);
+Route::get('getRecommandedProfilsForOffer/{id}', [EmployeurController::class, 'getRecommandedProfilsForOffer']);
 Route::get('getEmployeur/{id}', [EmployeurController::class, 'getEmployeurByID']);
 Route::post('createEmployeur', [EmployeurController::class, 'createEmployeur']);
 Route::put('updateEmployeur/{id}', [EmployeurController::class, 'updateEmployeur']);
 Route::delete('deleteEmployeur/{id}', [EmployeurController::class, 'deleteEmployeur']);
 
-//employeurs routes
+//offres routes
 Route::get('getOffres', [OffreController::class, 'getOffres']);
 Route::get('getOffre/{id}', [OffreController::class, 'getOffreByID']);
+Route::get('getOffresByEmployeurId/{id}', [OffreController::class, 'getOffresByEmployeurId']);
 Route::post('createOffre', [OffreController::class, 'createOffre']);
 Route::put('updateOffre/{id}', [OffreController::class, 'updateOffre']);
 Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);

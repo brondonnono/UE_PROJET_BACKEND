@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id', true)->unsigned();
             $table->integer('user_id')->unsigned();
             $table->string('nom');
-            $table->string('sexe');
+            $table->char('sexe', 1);
             $table->timestamp('DateNais');
             $table->text('formations');
             $table->text('competences');

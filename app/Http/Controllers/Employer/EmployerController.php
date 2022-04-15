@@ -10,6 +10,8 @@ use \stdClass;
 use App\Http\Controllers\Utils\utilController;
 use App\Http\Controllers\Offre\OffreController;
 use App\Models\EmployerModel;
+use App\Models\CandidateModel;
+use Illuminate\Support\Facades\DB;
 
 class EmployerController extends Controller
 {
@@ -32,6 +34,14 @@ class EmployerController extends Controller
         return response()->json($employer, 200);
     }
 
+    public function getEmployerByUserID($id) {
+        $employer = DB::table('employes')->where('user_id', $id)->first();
+        if(is_null($employer)) {
+            return response()->json(["message" => "Aucun employé trouvé avec cet identifiant d'utilisateur", "status" => "404"], 404);
+        }
+        return response()->json($employer, 200);
+    }
+
     public function createEmployer(Request $request) {
         $rules = [
             'sexe' => 'required|max:1',
@@ -45,6 +55,55 @@ class EmployerController extends Controller
         }
         $employer = EmployerModel::create($request->all());
         return response()->json($employer, 201);
+    }
+
+    public function createCandidate(Request $request) {
+        $rules = [
+            'employe_id' => 'required',
+            'offre_id' => 'required|unique:candidate,offre_id'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+        $candidate = CandidateModel::create($request->all());
+        return response()->json($candidate, 201);
+    }
+
+    public function deleteCandidate(Request $request, $id) {
+        $candidate = CandidateModel::find($id);
+        if(is_null($candidate)) {
+            return response()->json(["message" => "Suppression impossible! candidature inexistante"], 404);
+        }
+        $candidate->delete();
+        return response()->json(["message" => "Candidature supprimée avec succès"], 200);
+    }
+
+    public function getCandidateByOffreID($id) {
+        $candidate = DB::table('candidate')->where('offre_id', $id)->first();
+        if(is_null($candidate)) {
+            return response()->json(["message" => "Aucune candidature trouvé avec cet identifiant d'offre", "status" => "404"], 404);
+        }
+        return response()->json($candidate, 200);
+    }
+
+    public function getCandidates() {
+        $candidateList = CandidateModel::paginate();
+        $response = response()->json($candidateList, 200);
+        $result = $response->getData(false, 512);
+
+        if(($result->data == [])) {
+            return response()->json(["message" => "Aucune candidature trouvé"], 404);
+        }
+        return $response;
+    }
+
+    public function getCandidateByID($id) {
+        $candidate = CandidateModel::find($id);
+        if(is_null($candidate)) {
+            return response()->json(["message" => "Aucune candidature trouvé avec cet identifiant"], 404);
+        }
+        return response()->json($candidate, 200);
     }
 
     public function updateEmployer(Request $request, $id) {
@@ -71,37 +130,37 @@ class EmployerController extends Controller
 		$recommandationOffres = new stdClass();
         $employer = new \stdClass();
         $user = $this->getEmployerByID($id)->getData();
-        $employer->competences = (new utilController)->makeCompetenceArrayFormString($user->competences);
+        $employer->competences = (new utilController)->makeCompetenceArrayFromString($user->competences);
         $employer->nom = $user->nom;
         $employer->id = $user->id;
         $offre = (new OffreController)->getOffres()->getData();
         
         for ($i=0; $i < sizeof($offre->data); $i++) {
-            $offre->data[$i]->competencesRequises = (new utilController)->makeCompetenceArrayFormString($offre->data[$i]->competencesRequises);
+            $offre->data[$i]->competencesRequises = (new utilController)->makeCompetenceArrayFromString($offre->data[$i]->competencesRequises);
         }
 		$recommandationOffres->user_id = $employer->id;
 		$recommandationOffres->user_competences = $employer->competences;
         
 		for( $i = 0; $i < sizeof($offre->data); $i++) {
-			$macthRate = 0;
+			$matchRate = 0;
 			for( $j = 0; $j < sizeof($offre->data[$i]->competencesRequises); $j++) {
 				for( $k = 0; $k < sizeof($employer->competences); $k++) {
 					if ( $employer->competences[$k] == $offre->data[$i]->competencesRequises[$j]) {
-						$macthRate++;
+						$matchRate++;
 					}
 				}
 			}
-			if( $macthRate == sizeof($offre->data[$i]->competencesRequises)) {
+			if( $matchRate == sizeof($offre->data[$i]->competencesRequises)) {
 				$result = new stdClass();
 				$result->offre_id = $offre->data[$i]->id;
 				$result->offre_competences = $offre->data[$i]->competencesRequises;
-				$result->macthRate = $macthRate;
+				$result->matchRate = $matchRate;
 				$recommandation[$i] = response()->json($result)->getData();
-			} else if($macthRate >= 1 && $macthRate < sizeof($offre->data[$i]->competencesRequises)) {
+			} else if($matchRate >= 1 && $matchRate < sizeof($offre->data[$i]->competencesRequises)) {
 				$result = new stdClass();
 				$result->offre_id = $offre->data[$i]->id;
 				$result->offre_competences = $offre->data[$i]->competencesRequises;
-				$result->macthRate = $macthRate;
+				$result->matchRate = $matchRate;
 				$secondRecommandation[$i] = response()->json($result)->getData();
 			}
 		}
@@ -113,9 +172,11 @@ class EmployerController extends Controller
 		$recommandationOffres->AutresOffres = $secondRecommandation;
 		
 		if (sizeof($recommandation)==0 && sizeof($secondRecommandation)==0) {
-			return response()->json(["message" => "Pour le moment aucune offre ne concorde avec vos compétences", "macthRate" => $macthRate], 404);
+			return response()->json(["message" => "Pour le moment aucune offre ne concorde avec vos compétences", "matchRate" => $matchRate], 404);
         }
         return $recommandationOffres;
     }
+
+
 }
  
