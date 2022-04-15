@@ -26,6 +26,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'type' => $request->type,
                 'password' =>Hash::make($request->password)
             ]);
 
@@ -34,7 +35,8 @@ class AuthController extends Controller
                 'status' => '200',
                 'username' => $user->name,
                 'token' => $token,
-                'message' => 'Inscription réuissie'
+                'type' => $user->type,
+                'message' => 'Inscription réussie'
             ]);
         }
     }
@@ -63,7 +65,9 @@ class AuthController extends Controller
                     'status' => '200',
                     'username' => $user->name,
                     'token' => $token,
-                    'message' => 'Connexion réuissie'
+                    'type' => $user->type,
+                    'id' => $user->id,
+                    'message' => 'Connexion réussie'
                 ]);
             }
         }
@@ -73,7 +77,7 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
         return response()->json([
             'status' => '200',
-            'message' => 'Déconnexion réuissie'
+            'message' => 'Déconnexion réussie'
         ]);
     }
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Offre;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\OffreModel;
+use Illuminate\Support\Facades\DB;
 
 class OffreController extends Controller
 {
@@ -58,11 +60,25 @@ class OffreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getOffreByID($id) {
-        $employer = OffreModel::find($id);
+        $offre = OffreModel::find($id);
         if(is_null($offre)) {
             return response()->json(["message" => "Aucun offre trouvé avec cet identifiant"], 404);
         }
         return response()->json($offre, 200);
+    }
+
+    /**
+     * Display a listing of Offre from employeur_id.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getOffresByEmployeurId($id) {
+        $offres = DB::table('offres')->where('employeur_id', $id)->get();
+        if(is_null($offres)) {
+            return response()->json(["message" => "Aucun offre trouvé avec cet identifiant d'employé"], 404);
+        }
+        return response()->json($offres, 200);
     }
 
     /**
