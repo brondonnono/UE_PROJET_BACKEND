@@ -16,12 +16,11 @@ class OffreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getOffres() {
-        $nb_per_page = 10;
-        $offreList = OffreModel::paginate($nb_per_page);
+        $offreList = OffreModel::all();
         $response = response()->json($offreList, 200);
         $result = $response->getData(false, 512);
 
-        if(($result->data == [])) {
+        if(($result == [])) {
             return response()->json(["message" => "Aucune offre trouvé"], 404);
         }
         return $response;
@@ -35,15 +34,15 @@ class OffreController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function createOffre(Request $request)
-    {
+    public function createOffre(Request $request){
         $rules = [
-            'posteVise' => 'required',
             'employeur_id' => 'required',
+            'libelle' => 'required',
             'description' => 'required',
+            'dateExpiration' => 'required',
+            'posteVise' => 'required',
             'competencesRequises' => 'required',
-            'typeOffre' => 'required',
-            'dateExpiration' => 'required'
+            'typeOffre' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
@@ -75,7 +74,7 @@ class OffreController extends Controller
      */
     public function getOffresByEmployeurId($id) {
         $offres = DB::table('offres')->where('employeur_id', $id)->get();
-        if(is_null($offres)) {
+        if(is_null($offres) || sizeof($offres)==0) {
             return response()->json(["message" => "Aucun offre trouvé avec cet identifiant d'employé"], 404);
         }
         return response()->json($offres, 200);

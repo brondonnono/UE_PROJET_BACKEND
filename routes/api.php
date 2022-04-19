@@ -69,7 +69,7 @@ Route::delete('deleteOfferRejected/{id}', [OfferRejectedController::class, 'dele
 Route::get('getEmployeurs', [EmployeurController::class, 'getEmployeurs']);
 Route::get('getEmployeurByUserId/{id}', [EmployeurController::class, 'getEmployeurByUserID']);
 Route::get('getRecommandedProfilsForOffer/{id}', [EmployeurController::class, 'getRecommandedProfilsForOffer']);
-Route::get('getEmployeur/{id}', [EmployeurController::class, 'getEmployeurByID']);
+Route::get('getEmployeurByID/{id}', [EmployeurController::class, 'getEmployeurByID']);
 Route::post('createEmployeur', [EmployeurController::class, 'createEmployeur']);
 Route::put('updateEmployeur/{id}', [EmployeurController::class, 'updateEmployeur']);
 Route::delete('deleteEmployeur/{id}', [EmployeurController::class, 'deleteEmployeur']);
@@ -79,10 +79,12 @@ Route::get('getOffres', [OffreController::class, 'getOffres']);
 Route::get('getOffre/{id}', [OffreController::class, 'getOffreByID']);
 Route::get('getOffresByEmployeurId/{id}', [OffreController::class, 'getOffresByEmployeurId']);
 Route::post('createOffre', [OffreController::class, 'createOffre']);
-Route::put('updateOffre/{id}', [OffreController::class, 'updateOffre']);
+Route::post('updateOffre/{id}', [OffreController::class, 'updateOffre']);
 Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
 
 
-//cv Routes
+//file Routes
 Route::get('cv/download', [CvController::class, 'download']);
 Route::post('cv/upload', [CvController::class, 'upload']);
+Route::get('downloadImg', [CvController::class, 'downloadImg']);
+Route::post('uploadImg', [CvController::class, 'uploadImg']);

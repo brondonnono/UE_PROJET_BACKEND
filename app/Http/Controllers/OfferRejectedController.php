@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\DB;
 class OfferRejectedController extends Controller
 {
     public function getOffersRejected() {
-        $offerRejectedList = EmployerModel::paginate();
+        $offerRejectedList = offerRejected::all();
         $response = response()->json($offerRejectedList, 200);
         $result = $response->getData(false, 512);
 
-        if(($result->data == [])) {
+        if(($result == [])) {
             return response()->json(["message" => "Aucune offre rejetée n'a été trouvée"], 404);
         }
         return $response;
@@ -30,11 +30,13 @@ class OfferRejectedController extends Controller
     }
 
     public function getOfferRejectedByEmployerID($id) {
-        $offerRejected = DB::table('offerRejected')->where('employe_id', $id)->first();
-        if(is_null($offerRejected)) {
+        $offerRejected = DB::table('offerRejected')->where('employe_id', $id)->get();
+        if(is_null($offerRejected) || sizeof($offerRejected)==0) {
             return response()->json(["message" => "Aucune offre rejetée par cet employé", "status" => "404"], 404);
         }
-        return response()->json($offerRejected, 200);
+        $response = response()->json($offerRejected, 200);
+        $result = $response->getData(false, 512);
+        return $result;
     }
 
     public function createOfferRejected(Request $request) {

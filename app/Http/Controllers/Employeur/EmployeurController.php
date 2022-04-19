@@ -21,11 +21,11 @@ class EmployeurController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getEmployeurs() {
-        $employeurList = EmployeurModel::paginate();
+        $employeurList = EmployeurModel::all();
         $response = response()->json($employeurList, 200);
         $result = $response->getData(false, 512);
 
-        if(($result->data == [])) {
+        if(($result == [])) {
             return response()->json(["message" => "Aucun employeur trouvé"], 404);
         }
         return $response;
@@ -61,7 +61,7 @@ class EmployeurController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getEmployeurByID($id) {
-        $employer = EmployeurModel::find($id);
+        $employeur = EmployeurModel::find($id);
         if(is_null($employeur)) {
             return response()->json(["message" => "Aucun employeur trouvé avec cet identifiant"], 404);
         }
@@ -130,17 +130,17 @@ class EmployeurController extends Controller
         $offer->employeur_id = $offre->employeur_id;
         $users = (new EmployerController)->getEmployers()->getData();
         
-        for ($i=0; $i < sizeof($users->data) ; $i++) { 
-            $users->data[$i]->competences = (new utilController)->makeCompetenceArrayFromString($users->data[$i]->competences);
+        for ($i=0; $i < sizeof($users) ; $i++) { 
+            $users[$i]->competences = (new utilController)->makeCompetenceArrayFromString($users[$i]->competences);
         }
         $recommandationProfils->offer_id = $offer->id;
         $recommandationProfils->offer_competences = $offer->competences;
 
-        for( $i = 0; $i < sizeof($users->data); $i++) {
+        for( $i = 0; $i < sizeof($users); $i++) {
 			$matchRate = 0;
-            for( $j = 0; $j < sizeof($users->data[$i]->competences); $j++) {
+            for( $j = 0; $j < sizeof($users[$i]->competences); $j++) {
 				for( $k = 0; $k < sizeof($offer->competences); $k++) {
-					if ( $offer->competences[$k] == $users->data[$i]->competences[$j]) {
+					if ( $offer->competences[$k] == $users[$i]->competences[$j]) {
 						$matchRate++;
 					}
 				}
@@ -148,14 +148,16 @@ class EmployeurController extends Controller
 
             if( $matchRate == sizeof($offer->competences)) {
 				$result = new stdClass();
-				$result->user_id = $users->data[$i]->id;
-				$result->user_competences = $users->data[$i]->competences;
+				$result->user_id = $users[$i]->id;
+                $result->username = $users[$i]->nom;
+				$result->user_competences = $users[$i]->competences;
 				$result->matchRate = $matchRate;
 				$topUsers[$i] = response()->json($result)->getData();
-			} else if($matchRate >= 1 && $matchRate < sizeof($users->data[$i]->competences)) {
+			} else if($matchRate >= 1 && $matchRate < sizeof($users[$i]->competences)) {
 				$result = new stdClass();
-				$result->user_id = $users->data[$i]->id;
-				$result->user_competences = $users->data[$i]->competences;
+				$result->user_id = $users[$i]->id;
+                $result->username = $users[$i]->nom;
+				$result->user_competences = $users[$i]->competences;
 				$result->matchRate = $matchRate;
 				$otherUsers[$i] = response()->json($result)->getData();
 			}
