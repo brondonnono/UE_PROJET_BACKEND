@@ -48,7 +48,6 @@ class EmployerController extends Controller
         $rules = [
             'sexe' => 'required|max:1',
             'user_id' => 'required',
-            'DateNais' => 'required',
             'villeResidence' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
