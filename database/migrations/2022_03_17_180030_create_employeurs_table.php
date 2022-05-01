@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('Secteur_activité');
             $table->string('ville');
+            $table->string('avatar');
             $table->timestamps();
         
             $table->engine = 'InnoDB';

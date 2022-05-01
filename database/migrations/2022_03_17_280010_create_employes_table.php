@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('competences');
             $table->string('villeResidence');
             $table->string('cv');
+            $table->string('avatar');
             $table->timestamps();
         
             $table->engine = 'InnoDB';

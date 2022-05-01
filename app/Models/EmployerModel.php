@@ -19,6 +19,7 @@ class EmployerModel extends Model
         'formations',
         'competences',
         'villeResidence',
-        'cv'
+        'cv',
+        'avatar',
     ];
 }

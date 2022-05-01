@@ -13,9 +13,14 @@ class CvController extends Controller
     }
 
     public function upload(Request $request) {
-        $file_name ='_CV.pdf';
-        $path = $request->file('cv')->move(public_path("/"), $file_name);
-        $cvURL = url('/'.$file_name);
+        $files = $request->file('cv');
+        $filename  = $files->getClientOriginalName();
+        $fileNameOnly = explode('.', $filename)[0];
+        $folder = "cv";
+        $extension = $files->getClientOriginalExtension();
+        $cv = str_replace(' ', '_', $fileNameOnly).'-'.rand().'_'.time().'.'.$extension;
+        $files->move(public_path($folder), $cv);
+        $cvURL = url($folder.'/'.$cv);
         return response()->json(["url" => $cvURL], 200);
     }
 
@@ -28,18 +33,19 @@ class CvController extends Controller
 
     public function uploadImg(Request $request) {
         if(!$request->hasFile('img')) {
-            return response()->json(['message'=>'Aucune image sélectionnée'], 400);
+            return response()->json(['message'=>'Aucune img sélectionnée'], 400);
         }
         $allowedFileExtension=['jpg', 'JPG', 'png', 'PNG', 'jpeg', 'JPEG'];
         $files = $request->file('img');
         $folder = "avatars";
-
         $extension = $files->getClientOriginalExtension();
         $check = in_array($extension, $allowedFileExtension);
         if($check) {
-            $file_name = $request->user_id.'_userProfil.png';
-            $path = $request->img->move(public_path('/'.$folder), $file_name);
-            $imgURL = url($folder.'/'.$file_name);
+            $filename  = $files->getClientOriginalName();
+            $fileNameOnly = explode('.', $filename)[0];
+            $picture = str_replace(' ', '_', $fileNameOnly).'-'.rand().'_'.time().'.'.$extension;
+            $files->move(public_path($folder), $picture);
+            $imgURL = url($folder.'/'.$picture);
         } else {
             return response()->json(['message'=>'format de fichier invalide'], 422);
         }

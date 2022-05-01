@@ -16,6 +16,7 @@ class EmployeurModel extends Model
         'nom',
         'description',
         'Secteur_activité',
-        'ville'
+        'ville',
+        'avatar',
     ];
 }

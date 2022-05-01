@@ -84,7 +84,7 @@ Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
 
 
 //file Routes
-Route::get('cv/download', [CvController::class, 'download']);
-Route::post('cv/upload', [CvController::class, 'upload']);
+Route::get('downloadCv', [CvController::class, 'download']);
+Route::post('uploadCv', [CvController::class, 'upload']);
 Route::get('downloadImg', [CvController::class, 'downloadImg']);
 Route::post('uploadImg', [CvController::class, 'uploadImg']);
