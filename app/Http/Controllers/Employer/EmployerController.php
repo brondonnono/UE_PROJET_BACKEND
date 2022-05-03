@@ -161,12 +161,14 @@ class EmployerController extends Controller
                 if( $matchRate == sizeof($item->competencesRequises)) {
                     $result = new stdClass();
                     $result->offre_id = $item->id;
+                    $result->employeur_id = $item->employeur_id;
                     $result->offre_competences = $item->competencesRequises;
                     $result->matchRate = $matchRate;
                     $recommandation[$i] = response()->json($result)->getData();
                 } else if($matchRate >= 1 && $matchRate < sizeof($item->competencesRequises)) {
                     $result = new stdClass();
                     $result->offre_id = $item->id;
+                    $result->employeur_id = $item->employeur_id;
                     $result->offre_competences = $item->competencesRequises;
                     $result->matchRate = $matchRate;
                     $secondRecommandation[$i] = response()->json($result)->getData();

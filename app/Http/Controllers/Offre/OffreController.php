@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\OffreModel;
+use App\Http\Controllers\Employeur\EmployeurController;
 use Illuminate\Support\Facades\DB;
 
 class OffreController extends Controller
@@ -19,6 +20,21 @@ class OffreController extends Controller
         $offreList = OffreModel::all();
         $response = response()->json($offreList, 200);
         $result = $response->getData(false, 512);
+        $offers = [];
+        // for ($i=0; $i < sizeof($result); $i++) { 
+        //     $offer->id = $response[$i]->id;
+        //    $offer->employeur_id = $response[$i]->employeur_id;
+        //    $offer->libelle = $response[$i]->libelle;
+        //    $offer->description = $response[$i]->description;
+        //    $offer->dateExpiration = $response[$i]->dateExpiration;
+        //    $offer->posteVise = $response[$i]->posteVise;
+        //    $offer->competencesRequises = $response[$i]->competencesRequises;
+        //    $offer->typeOffre = $response[$i]->typeOffre;
+        //    $offer->img = $this->getEmployeurImg($offer->employeur_id);
+        //    $offer->created_at = $response[$i]->created_at;
+        //    $offer->updated_at = $response[$i]->updated_at;
+        //    $offers->push($offer);
+        // }
 
         if(($result == [])) {
             return response()->json(["message" => "Aucune offre trouvé"], 404);
@@ -26,6 +42,13 @@ class OffreController extends Controller
         return $response;
     }
 
+    public function getEmployeurImg($id) {
+        $employeur = (new EmployeurController)->getEmployeurById($id);
+        if (!$employeur->message) {
+            return response()->json($employeur->avatar, 200);         
+        }
+        return response()->json(["message" => "Aucun employeur trouvé avec cet identifiant"], 404);
+    }
 
     /**
      * Create and Store a newly Offre in storage.
