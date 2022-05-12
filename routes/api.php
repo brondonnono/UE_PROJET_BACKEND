@@ -30,10 +30,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
-
 Route::post('password/forgot', [ForgotPasswordController::class, 'forgotPassword']);
-
-
 Route::post('password/reset', [ResetPasswordController::class, 'sendResetResponse']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -86,7 +83,7 @@ Route::post('createOffre', [OffreController::class, 'createOffre']);
 Route::post('updateOffre/{id}', [OffreController::class, 'updateOffre']);
 Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
 Route::get('findOffersByKeyWords/{keyWords}', [EmployerController::class, 'findOffersByKeyWords']);
-
+Route::get('findEmployeByKeyWords/{keyWords}', [EmployerController::class, 'findEmployeByKeyWords']);
 
 //file Routes
 Route::get('downloadCv', [CvController::class, 'download']);

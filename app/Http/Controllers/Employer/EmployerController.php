@@ -243,4 +243,22 @@ class EmployerController extends Controller
         }
         return response()->json($offres, 200);
     }
+
+    public function findEmployeByKeyWords(Request $request, $keyWords)  {
+        $profils = DB::select('select * from employes where competences like ?', ["%$keyWords%"]);
+        if(is_null($profils) || sizeof($profils) == 0) {
+            return response()->json(["message" => "Aucun profil trouvé"], 404);
+        }
+        return response()->json($profils, 200);
+        // $employe = $this->getEmployers();
+        // if (sizeof($employe) > 0) {
+        //     foreach ($employe as $item) {
+        //         // $item->competences = Str::lower($item ->competences);
+        //         $item->competences = (new utilController)->makeCompetenceArrayFromString($item->competences);
+
+        //     }
+        // }
+    }
+
+    
 }
