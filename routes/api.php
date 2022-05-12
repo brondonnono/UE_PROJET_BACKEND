@@ -43,11 +43,13 @@ Route::get('getRecommandedOffres/{id}', [EmployerController::class, 'getRecomman
 
 //employers routes
 Route::get('getEmployers', [EmployerController::class, 'getEmployers']);
+Route::get('getUserEmail/{id}', [EmployerController::class, 'getUserEmail']);
 Route::get('getEmployerByUserId/{id}', [EmployerController::class, 'getEmployerByUserID']);
 Route::get('getEmployerByID/{id}', [EmployerController::class, 'getEmployerByID']);
 Route::post('createEmployer', [EmployerController::class, 'createEmployer']);
 Route::put('updateEmployer/{id}', [EmployerController::class, 'updateEmployer']);
 Route::delete('deleteEmployer/{id}', [EmployerController::class, 'deleteEmployer']);
+Route::get('downloadCvByEmployeID/{id}', [EmployerController::class, 'downloadCvByEmployeID']);
 
 //candidate routes
 Route::post('createCandidate', [EmployerController::class, 'createCandidate']);
@@ -86,7 +88,7 @@ Route::get('findOffersByKeyWords/{keyWords}', [EmployerController::class, 'findO
 Route::get('findEmployeByKeyWords/{keyWords}', [EmployerController::class, 'findEmployeByKeyWords']);
 
 //file Routes
-Route::get('downloadCv', [CvController::class, 'download']);
+Route::get('downloadCV/{id}', [CvController::class, 'download']);
 Route::post('uploadCv', [CvController::class, 'upload']);
 Route::get('downloadImg', [CvController::class, 'downloadImg']);
 Route::post('uploadImg', [CvController::class, 'uploadImg']);

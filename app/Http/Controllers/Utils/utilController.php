@@ -20,4 +20,9 @@ class utilController extends Controller
     public function makeCompetenceArrayFromString($competences) {
        return explode(';', $competences);
     }
+
+    public function getCvFileName($url) {
+        $tab = explode('/', $url);
+        return $tab[4];
+     }
 }

@@ -175,30 +175,6 @@ class EmployerController extends Controller
                     $s++;
                 }
             }
-            // for( $i = 1; $i < sizeof($offre)+1; $i++) {
-            //     $matchRate = 0;
-            //     for( $j = 0; $j < sizeof($offre[$i]->competencesRequises); $j++) {
-            //         for( $k = 0; $k < sizeof($employer->competences); $k++) {
-            //             if ( $employer->competences[$k] == $offre[$i]->competencesRequises[$j]) {
-            //                 $matchRate++;
-            //             }
-            //         }
-            //     }
-            //     if( $matchRate == sizeof($offre[$i]->competencesRequises)) {
-            //         $result = new stdClass();
-            //         $result->offre_id = $offre[$i]->id;
-            //         $result->offre_competences = $offre[$i]->competencesRequises;
-            //         $result->matchRate = $matchRate;
-            //         $recommandation[$i] = response()->json($result)->getData();
-            //     } else if($matchRate >= 1 && $matchRate < sizeof($offre[$i]->competencesRequises)) {
-            //         $result = new stdClass();
-            //         $result->offre_id = $offre[$i]->id;
-            //         $result->offre_competences = $offre[$i]->competencesRequises;
-            //         $result->matchRate = $matchRate;
-            //         $secondRecommandation[$i] = response()->json($result)->getData();
-            //     }
-            // }
-            
             $recommandationOffres->Size = sizeof($recommandation);
             $recommandationOffres->Offres = $recommandation;
             
@@ -236,7 +212,6 @@ class EmployerController extends Controller
     }
     
     public function findOffersByKeyWords(Request $request, $keyWords)  {
-        // $offres = DB::table('offres')->where('libelle')->get();
         $offres = DB::select('select * from offres where libelle like ? or description like ?', ["%$keyWords%","%$keyWords%"]);
         if(is_null($offres) || sizeof($offres) == 0) {
             return response()->json(["message" => "Aucune offre trouvé"], 404);
@@ -250,15 +225,21 @@ class EmployerController extends Controller
             return response()->json(["message" => "Aucun profil trouvé"], 404);
         }
         return response()->json($profils, 200);
-        // $employe = $this->getEmployers();
-        // if (sizeof($employe) > 0) {
-        //     foreach ($employe as $item) {
-        //         // $item->competences = Str::lower($item ->competences);
-        //         $item->competences = (new utilController)->makeCompetenceArrayFromString($item->competences);
-
-        //     }
-        // }
     }
 
-    
+    public function getUserEmail(Request $request, $id) {
+        $employer = DB::table('users')->where('id', $id)->first();
+        if(is_null($employer)) {
+            return response()->json(["message" => "Aucune adresse mail trouvé avec cet identifiant d'utilisateur", "status" => "404"], 404);
+        }
+        return response()->json($employer->email, 200);
+    }
+
+    public function downloadCvByEmployeID(Request $request, $id) {
+        $employer = EmployerModel::find($id);
+        if(is_null($employer)) {
+            return response()->json(["message" => "Aucune cv trouvé avec cet identifiant d'employé", "status" => "404"], 404);
+        }
+        return $employer->cv;
+    }
 }

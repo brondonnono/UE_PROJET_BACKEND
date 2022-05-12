@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\EmployerModel;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Utils\utilController;
 
 class CvController extends Controller
 {
-    public function download() {
-        $file_name = 'CV wilfried-old.pdf';
-        return response()->download(public_path($file_name), 'user_cv');
+    public function download(Request $request, $id) {
+        $employer = EmployerModel::find($id);
+        if(is_null($employer)) {
+            return response()->json(["message" => "Aucune cv trouvé avec cet identifiant d'employé", "status" => "404"], 404);
+        }
+        $fileName = (new utilController)->getCvFileName($employer->cv);
+        $file_name = 'cv/'.$fileName;
+        return response()->download(public_path($file_name));
     }
 
     public function upload(Request $request) {
