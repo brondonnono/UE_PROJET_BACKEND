@@ -37,14 +37,14 @@ class OffreController extends Controller
         // }
 
         if(($result == [])) {
-            return response()->json(["message" => "Aucune offre trouvée"], 404);
+            return response()->json(["message" => "Aucune offre trouvé"], 404);
         }
         return $response;
     }
 
     public function getEmployeurImg($id) {
         $employeur = (new EmployeurController)->getEmployeurById($id);
-        if ($employeur) {
+        if (!$employeur->message) {
             return response()->json($employeur->avatar, 200);         
         }
         return response()->json(["message" => "Aucun employeur trouvé avec cet identifiant"], 404);
@@ -65,17 +65,13 @@ class OffreController extends Controller
             'dateExpiration' => 'required',
             'posteVise' => 'required',
             'competencesRequises' => 'required',
-            'typeOffre' => 'required',
-            'ville' => 'required'
+            'typeOffre' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
         $offre = OffreModel::create($request->all());
-        $emp = (new EmployeurController)->internalGetEmployeurById($request->employeur_id);
-        $offre->img = $emp->avatar;
-        $offre = DB::update('update offres set img = ? where id = ?', [$offre->img, $offre->id]);
         return response()->json($offre, 201);
     }
 
@@ -88,7 +84,7 @@ class OffreController extends Controller
     public function getOffreByID($id) {
         $offre = OffreModel::find($id);
         if(is_null($offre)) {
-            return response()->json(["message" => "Aucune offre trouvée avec cet identifiant"], 404);
+            return response()->json(["message" => "Aucune offre trouvé avec cet identifiant"], 404);
         }
         return response()->json($offre, 200);
     }
@@ -102,7 +98,7 @@ class OffreController extends Controller
     public function getOffresByEmployeurId($id) {
         $offres = DB::table('offres')->where('employeur_id', $id)->get();
         if(is_null($offres) || sizeof($offres)==0) {
-            return response()->json(["message" => "Aucune offre trouvée avec cet identifiant d'employé"], 404);
+            return response()->json(["message" => "Aucune offre trouvé avec cet identifiant d'employé"], 404);
         }
         return response()->json($offres, 200);
     }
@@ -117,7 +113,7 @@ class OffreController extends Controller
     public function updateOffre(Request $request, $id) {
         $offre = OffreModel::find($id);
         if(is_null($offre)) {
-            return response()->json(["message" => "Modification impossible! offre inexistante"], 404);
+            return response()->json(["message" => "Modification impossible! offre inexistant"], 404);
         }
         $offre->update($request->all());
         return response()->json($offre, 200);
@@ -132,9 +128,9 @@ class OffreController extends Controller
     public function deleteOffre(Request $request, $id) {
         $offre = OffreModel::find($id);
         if(is_null($offre)) {
-            return response()->json(["message" => "Suppression impossible! offre inexistante"], 404);
+            return response()->json(["message" => "Suppression impossible! offre inexistant"], 404);
         }
         $offre->delete();
-        return response()->json(["message" => "Offre supprimée avec succès"], 200);
+        return response()->json(["message" => "Offre supprimé avec succès. Veuillez supprimer aussi son compte utilisateur"], 200);
     }
 }

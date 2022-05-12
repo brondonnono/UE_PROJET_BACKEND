@@ -18,6 +18,8 @@ class OffreModel extends Model
         'dateExpiration',
         'posteVise',
         'competencesRequises',
-        'typeOffre'
+        'typeOffre',
+        'ville',
+        'img'
     ];
 }

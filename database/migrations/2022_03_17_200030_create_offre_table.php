@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('posteVise');
             $table->text('competencesRequises');
             $table->string('typeOffre');
+            $table->string('ville');
+            $table->string('img');
             $table->timestamps();
             $table->foreign('employeur_id')->references('id')->on('employeurs');
         });

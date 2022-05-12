@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Employeur\EmployeurController;
+use App\Http\Controllers\OfferPostulatedController;
 use App\Http\Controllers\OfferRejectedController;
 
 
@@ -61,8 +62,11 @@ Route::delete('deleteCandidate/{id}', [EmployerController::class, 'deleteCandida
 //offerRejected routes
 Route::post('createOfferRejected', [OfferRejectedController::class, 'createOfferRejected']);
 Route::get('getOfferRejectedByID/{id}', [OfferRejectedController::class, 'getOfferRejectedByID']);
+Route::get('getOfferPostulatedByID/{id}', [OfferPostulatedController::class, 'getOfferPostulatedByID']);
 Route::get('getOfferRejectedByEmployerID/{id}', [OfferRejectedController::class, 'getOfferRejectedByEmployerID']);
+Route::get('getOfferRPostulatedByEmployerID/{id}', [OfferPostulatedController::class, 'getOfferRPostulatedByEmployerID']);
 Route::get('getOffersRejected', [OfferRejectedController::class, 'getOffersRejected']);
+Route::get('getOfferPostulatedByEmployerID/{id}', [OfferPostulatedController::class, 'getOfferPostulatedByEmployerID']);
 Route::delete('deleteOfferRejected/{id}', [OfferRejectedController::class, 'deleteOfferRejected']);
 
 //employeurs routes
@@ -81,6 +85,7 @@ Route::get('getOffresByEmployeurId/{id}', [OffreController::class, 'getOffresByE
 Route::post('createOffre', [OffreController::class, 'createOffre']);
 Route::post('updateOffre/{id}', [OffreController::class, 'updateOffre']);
 Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
+Route::get('findOffersByKeyWords/{keyWords}', [EmployerController::class, 'findOffersByKeyWords']);
 
 
 //file Routes

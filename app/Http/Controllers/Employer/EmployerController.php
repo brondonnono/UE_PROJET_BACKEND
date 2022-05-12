@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use \stdClass;
+// use \Str;
 
 use App\Http\Controllers\Utils\utilController;
 use App\Http\Controllers\Offre\OffreController;
@@ -124,13 +125,15 @@ class EmployerController extends Controller
         $employer->delete();
         return response()->json(["message" => "Employé supprimé avec succès. Veuillez supprimer aussi son compte utilisateur"], 200);
     }
-
     public function getRecommandedOffresForUser(Request $request, $id) {
         $recommandation = array();
+        $r = 0;
+        $s = 0;
 		$secondRecommandation = array();
 		$recommandationOffres = new stdClass();
         $employer = new \stdClass();
         $user = $this->getEmployerByID($id)->getData();
+        // $user->competences = Str::lower($user->competences);
         $employer->competences = (new utilController)->makeCompetenceArrayFromString($user->competences);
         $employer->nom = $user->nom;
         $employer->id = $user->id;
@@ -138,17 +141,13 @@ class EmployerController extends Controller
         $offre = $this->removeRejectedOfferForCurrentUser($employer->id, $offre);
 
         if (sizeof($offre) > 0) {
-            // for ($i=1; $i < sizeof($offre)+1; $i++) {
-            //     $offre[$i]->competencesRequises = (new utilController)->makeCompetenceArrayFromString($offre[$i]->competencesRequises);
-            // }
-
-            foreach ( $offre as $item) {
+            foreach ($offre as $item) {
+                // $item->competencesRequises = Str::lower($item ->competencesRequises);
                 $item->competencesRequises = (new utilController)->makeCompetenceArrayFromString($item->competencesRequises);
             }
             $recommandationOffres->user_id = $employer->id;
             $recommandationOffres->user_competences = $employer->competences;
             
-            $i = 0;
             foreach ($offre as $item) {
                 $matchRate = 0;
                 for( $j = 0; $j < sizeof($item->competencesRequises); $j++) {
@@ -158,22 +157,23 @@ class EmployerController extends Controller
                         }
                     }
                 }
-                if( $matchRate == sizeof($item->competencesRequises)) {
+                if($matchRate == sizeof($item->competencesRequises)) {
                     $result = new stdClass();
                     $result->offre_id = $item->id;
                     $result->employeur_id = $item->employeur_id;
                     $result->offre_competences = $item->competencesRequises;
                     $result->matchRate = $matchRate;
-                    $recommandation[$i] = response()->json($result)->getData();
+                    $recommandation[$r] = response()->json($result)->getData();
+                    $r++;
                 } else if($matchRate >= 1 && $matchRate < sizeof($item->competencesRequises)) {
                     $result = new stdClass();
                     $result->offre_id = $item->id;
                     $result->employeur_id = $item->employeur_id;
                     $result->offre_competences = $item->competencesRequises;
                     $result->matchRate = $matchRate;
-                    $secondRecommandation[$i] = response()->json($result)->getData();
+                    $secondRecommandation[$s] = response()->json($result)->getData();
+                    $s++;
                 }
-                $i++;
             }
             // for( $i = 1; $i < sizeof($offre)+1; $i++) {
             //     $matchRate = 0;
@@ -207,7 +207,7 @@ class EmployerController extends Controller
             
             if (sizeof($recommandation)==0 && sizeof($secondRecommandation)==0) {
                 return response()->json([
-                    "message" => "Pour le moment aucune offre ne concorde avec vos compétences",
+                    "message" => "Pour le moment aucune offre ne concorde avec votre profil",
                     "matchRate" => $matchRate
                 ], 404);
             }
@@ -234,5 +234,13 @@ class EmployerController extends Controller
         }
         return $result;
     }
+    
+    public function findOffersByKeyWords(Request $request, $keyWords)  {
+        // $offres = DB::table('offres')->where('libelle')->get();
+        $offres = DB::select('select * from offres where libelle like ? or description like ?', ["%$keyWords%","%$keyWords%"]);
+        if(is_null($offres) || sizeof($offres) == 0) {
+            return response()->json(["message" => "Aucune offre trouvé"], 404);
+        }
+        return response()->json($offres, 200);
+    }
 }
- 

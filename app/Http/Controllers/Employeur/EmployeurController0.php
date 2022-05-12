@@ -43,8 +43,8 @@ class EmployeurController extends Controller
         $rules = [
             'Secteur_activité' => 'required',
             'user_id' => 'required',
-            'adresse' => 'required',
-            'email' => 'required'
+            'description' => 'required',
+            'ville' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
@@ -66,14 +66,6 @@ class EmployeurController extends Controller
             return response()->json(["message" => "Aucun employeur trouvé avec cet identifiant"], 404);
         }
         return response()->json($employeur, 200);
-    }
-
-    public function internalGetEmployeurById($id) {
-        $employeur = EmployeurModel::find($id);
-        if(is_null($employeur)) {
-            return "Aucun employeur trouvé avec cet identifiant";
-        }
-        return $employeur;
     }
 
     /**
@@ -178,7 +170,7 @@ class EmployeurController extends Controller
 		$recommandationProfils->OtherUsers = $otherUsers;
 		
 		if (sizeof($topUsers)==0 && sizeof($otherUsers)==0) {
-			return response()->json(["message" => "Pour le moment aucun profil ne concorde avec cette offre", "matchRate" => $matchRate], 404);
+			return response()->json(["message" => "Pour le moment aucun utilisateur ne concorde avec cette offre", "matchRate" => $matchRate], 404);
         }
         return $recommandationProfils;
     }
