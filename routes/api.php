@@ -57,6 +57,7 @@ Route::get('getCandidateByID/{id}', [EmployerController::class, 'getCandidateByI
 Route::get('getCandidateByOffreID/{id}', [EmployerController::class, 'getCandidateByOffreID']);
 Route::get('getCandidates', [EmployerController::class, 'getCandidates']);
 Route::delete('deleteCandidate/{id}', [EmployerController::class, 'deleteCandidate']);
+Route::post('validateCandidate', [EmployerController::class, 'validateCandidate']);
 
 //offerRejected routes
 Route::post('createOfferRejected', [OfferRejectedController::class, 'createOfferRejected']);

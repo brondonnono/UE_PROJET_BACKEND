@@ -14,6 +14,7 @@ class CandidateModel extends Model
     protected $fillable = [
         'id',
         'employe_id',
-        'offre_id'
+        'offre_id',
+        'status'
     ];
 }

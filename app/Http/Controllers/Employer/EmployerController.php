@@ -62,7 +62,7 @@ class EmployerController extends Controller
     public function createCandidate(Request $request) {
         $rules = [
             'employe_id' => 'required',
-            'offre_id' => 'required|unique:candidate,offre_id'
+            'offre_id' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
@@ -81,6 +81,14 @@ class EmployerController extends Controller
         return response()->json(["message" => "Candidature supprimée avec succès"], 200);
     }
 
+    public function getCandidatesByOffreID($id) {
+        $candidate = DB::table('candidate')->where('offre_id', $id)->get();
+        if($candidate = []) {
+            return response()->json(["message" => "Aucune candidature trouvé avec cet identifiant d'offre", "status" => "404"], 404);
+        }
+        return response()->json($candidate, 200);
+    }
+
     public function getCandidateByOffreID($id) {
         $candidate = DB::table('candidate')->where('offre_id', $id)->first();
         if(is_null($candidate)) {
@@ -90,10 +98,9 @@ class EmployerController extends Controller
     }
 
     public function getCandidates() {
-        $candidateList = CandidateModel::paginate();
+        $candidateList = CandidateModel::all();
         $response = response()->json($candidateList, 200);
         $result = $response->getData(false, 512);
-
         if(($result == [])) {
             return response()->json(["message" => "Aucune candidature trouvé"], 404);
         }
@@ -106,6 +113,16 @@ class EmployerController extends Controller
             return response()->json(["message" => "Aucune candidature trouvé avec cet identifiant"], 404);
         }
         return response()->json($candidate, 200);
+    }
+
+    public function validateCandidate(Request $request) {
+        // $candidate = $this->getCandidatesByOffreID($request->offre_id);
+        // $candidate = $candidate->getData(false, 512);
+        // if ($candidate == []) {
+        //     return response()->json('error', 200);
+        // } else {
+        //     return response()->json($candidate, 200);
+        // }
     }
 
     public function updateEmployer(Request $request, $id) {
