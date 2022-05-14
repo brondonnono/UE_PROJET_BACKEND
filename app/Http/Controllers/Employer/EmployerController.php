@@ -142,6 +142,7 @@ class EmployerController extends Controller
         $employer->delete();
         return response()->json(["message" => "Employé supprimé avec succès. Veuillez supprimer aussi son compte utilisateur"], 200);
     }
+    
     public function getRecommandedOffresForUser(Request $request, $id) {
         $recommandation = array();
         $r = 0;
@@ -258,5 +259,132 @@ class EmployerController extends Controller
             return response()->json(["message" => "Aucune cv trouvé avec cet identifiant d'employé", "status" => "404"], 404);
         }
         return $employer->cv;
+    }
+
+    public function getRecommandedOffresForUserWithExperience($id) {
+        $recommandation = array();
+        $r = 0;
+        $s = 0;
+		$secondRecommandation = array();
+		$recommandationOffres = new stdClass();
+        $employer = new \stdClass();
+        $user = $this->getEmployerByID($id)->getData();
+        $employer->nom = $user->nom;
+        $employer->id = $user->id;
+        $EmpCompetences = (new utilController)->makeCompetenceArrayFromString($user->competences);
+        $i = 0;
+        $employer->competences = array();
+        foreach ($EmpCompetences as $item) {
+            $item = (new utilController)->makeCompetenceExperienceArrayFromString($item);
+            $employer->competences[$i] = $item;
+            $i++;
+        }
+        $offre = (new OffreController)->getOffres()->getData();
+        $offre = $this->removeRejectedOfferForCurrentUser($employer->id, $offre);
+        if (sizeof($offre) > 0) {
+            $offresCompetences = array();
+            $i = 0;
+            foreach ($offre as $item) {
+                $item->competencesRequises = (new utilController)->makeCompetenceArrayFromString($item->competencesRequises);
+                $offresCompetences = $item->competencesRequises;
+                $item->competencesRequises = array();
+                foreach ($offresCompetences as $comp) {
+                    $item->competencesRequises[$i] = (new utilController)->makeCompetenceExperienceArrayFromString($comp);
+                    $i++;
+                }
+            }
+            $recommandationOffres->user_id = $employer->id;
+            $recommandationOffres->user_competences = $employer->competences;
+            foreach ($offre as $item) {
+                $i = $item->id;
+                $fullMatchRate = 0;
+                $lowMatchRate = 0;
+                $fullComp = array();
+                $cmpt1 = 0;
+                $cmpt2 = 0;
+                $fullList = array();
+                $fullL = 0;
+                $lowL = 0;
+                $lowList = array();
+                $lowComp = array();
+                foreach ($item->competencesRequises as $itemComp) {
+                    foreach ($employer->competences as $employerComp) {
+                        if(sizeof($employerComp) >= 1 && sizeof($itemComp) >= 1) {
+                            if ($employerComp[0] == $itemComp[0]) {
+                                if (sizeof($employerComp) == 2 && sizeof($itemComp) == 2) {
+                                    if ($employerComp[1] >= $itemComp[1]) {
+                                        $fullMatchRate++;
+                                        $fullComp[$i][$cmpt1] = $employerComp;
+                                        $fullList[$fullL] = $i;
+                                        $fullL = $i;
+                                        $cmpt1++;
+                                    } else {
+                                        $lowMatchRate++;
+                                        $lowComp[$i][$cmpt2] = $employerComp;
+                                        $lowList[$lowL] = $i;
+                                        $lowL = $i;
+                                        $cmpt2++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if ($fullMatchRate == sizeof($item->competencesRequises)) {
+                    $result = new stdClass();
+                    $result->offre_id = $item->id;
+                    $result->employeur_id = $item->employeur_id;
+                    $result->offre_competences = $item->competencesRequises;
+                    $result->matchRate = $fullMatchRate;
+                    if ($lowL == $i) {
+                        $lowTab = $lowComp;
+                    } else {
+                        $lowTab = [];
+                    }
+                    if ($fullL == $i) {
+                        $fullTab = $fullComp;
+                    } else {
+                        $fullTab = [];
+                    }
+                    $result->statusComp = ["full", $fullTab, "low", $lowTab];
+                    $recommandation[$r] = response()->json($result)->getData();
+                    $r++;
+                } else if (($fullMatchRate >= 1 || $lowMatchRate >=1) && $fullMatchRate < sizeof($item->competencesRequises)) {
+                    $result = new stdClass();
+                    $result->offre_id = $item->id;
+                    $result->employeur_id = $item->employeur_id;
+                    $result->offre_competences = $item->competencesRequises;
+                    if ($lowL == $i) {
+                        $lowTab = $lowComp;
+                    } else {
+                        $lowTab = [];
+                    }
+                    if ($fullL == $i) {
+                        $fullTab = $fullComp;
+                    } else {
+                        $fullTab = [];
+                    }
+                    $result->statusComp = ["full", $fullTab, "low", $lowTab];
+                    $result->matchRate = [$fullMatchRate, $lowMatchRate];
+                    $secondRecommandation[$s] = response()->json($result)->getData();
+                    $s++;
+                }
+                $i++;
+                $fullL++;
+                $lowL++;
+            }
+            $recommandationOffres->Size = sizeof($recommandation);
+            $recommandationOffres->Offres = $recommandation;
+            $recommandationOffres->Taille = sizeof($secondRecommandation);
+            $recommandationOffres->AutresOffres = $secondRecommandation;
+            
+            if (sizeof($recommandation)==0 && sizeof($secondRecommandation)==0) {
+                return response()->json([
+                    "message" => "Pour le moment aucune offre ne concorde avec votre profil",
+                    "matchRate" => $matchRate
+                ], 404);
+            }
+            return $recommandationOffres;
+        }
     }
 }

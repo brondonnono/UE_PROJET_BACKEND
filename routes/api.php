@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //recommandation routes
 Route::get('getRecommandedOffres/{id}', [EmployerController::class, 'getRecommandedOffresForUser']);
+Route::get('getRecommandedOffresWithExperience/{id}', [EmployerController::class, 'getRecommandedOffresForUserWithExperience']);
+
 
 //employers routes
 Route::get('getEmployers', [EmployerController::class, 'getEmployers']);
@@ -50,6 +52,7 @@ Route::post('createEmployer', [EmployerController::class, 'createEmployer']);
 Route::put('updateEmployer/{id}', [EmployerController::class, 'updateEmployer']);
 Route::delete('deleteEmployer/{id}', [EmployerController::class, 'deleteEmployer']);
 Route::get('downloadCvByEmployeID/{id}', [EmployerController::class, 'downloadCvByEmployeID']);
+
 
 //candidate routes
 Route::post('createCandidate', [EmployerController::class, 'createCandidate']);

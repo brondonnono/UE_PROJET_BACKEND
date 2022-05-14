@@ -17,8 +17,16 @@ class utilController extends Controller
         return $result;
     }
 
+    // public function makeCompetenceArrayFromString($competences) {
+    //     return explode(';', $competences);
+    // }
+
     public function makeCompetenceArrayFromString($competences) {
-       return explode(';', $competences);
+        return explode(',', $competences);
+    }
+
+    public function makeCompetenceExperienceArrayFromString($competence) {
+        return explode(':', $competence);
     }
 
     public function getCvFileName($url) {
