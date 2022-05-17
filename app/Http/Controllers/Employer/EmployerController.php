@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use \stdClass;
-// use \Str;
 
 use App\Http\Controllers\Utils\utilController;
 use App\Http\Controllers\Offre\OffreController;
@@ -22,7 +21,6 @@ class EmployerController extends Controller
         $employerList = EmployerModel::all();
         $response = response()->json($employerList, 200);
         $result = $response->getData(false, 512);
-
         if(($result == [])) {
             return response()->json(["message" => "Aucun employé trouvé"], 404);
         }
@@ -31,6 +29,11 @@ class EmployerController extends Controller
 
     public function getEmployerByID($id) {
         $employer = EmployerModel::find($id);
+        if(isset($employer->id)){
+            return response()->json($employer, 200);
+        } else {
+            return response()->json(["message" => "Aucun employé trouvé avec cet identifiant"], 404);
+        }
         if(is_null($employer)) {
             return response()->json(["message" => "Aucun employé trouvé avec cet identifiant"], 404);
         }
@@ -143,7 +146,7 @@ class EmployerController extends Controller
         return response()->json(["message" => "Employé supprimé avec succès. Veuillez supprimer aussi son compte utilisateur"], 200);
     }
     
-    public function getRecommandedOffresForUser(Request $request, $id) {
+    public function getRecommandedOffresForUser($id) {
         $recommandation = array();
         $r = 0;
         $s = 0;
@@ -151,7 +154,9 @@ class EmployerController extends Controller
 		$recommandationOffres = new stdClass();
         $employer = new \stdClass();
         $user = $this->getEmployerByID($id)->getData();
-        // $user->competences = Str::lower($user->competences);
+        if(isset($user->message)) {
+            return response()->json(["message" => "erreur sur l'id de l'utilisateur envoyé", "status"=>"500"], 500);
+        }
         $employer->competences = (new utilController)->makeCompetenceArrayFromString($user->competences);
         $employer->nom = $user->nom;
         $employer->id = $user->id;
@@ -160,7 +165,6 @@ class EmployerController extends Controller
 
         if (sizeof($offre) > 0) {
             foreach ($offre as $item) {
-                // $item->competencesRequises = Str::lower($item ->competencesRequises);
                 $item->competencesRequises = (new utilController)->makeCompetenceArrayFromString($item->competencesRequises);
             }
             $recommandationOffres->user_id = $employer->id;
@@ -229,7 +233,7 @@ class EmployerController extends Controller
         return $result;
     }
     
-    public function findOffersByKeyWords(Request $request, $keyWords)  {
+    public function findOffersByKeyWords($keyWords)  {
         $offres = DB::select('select * from offres where libelle like ? or description like ?', ["%$keyWords%","%$keyWords%"]);
         if(is_null($offres) || sizeof($offres) == 0) {
             return response()->json(["message" => "Aucune offre trouvé"], 404);
@@ -237,7 +241,7 @@ class EmployerController extends Controller
         return response()->json($offres, 200);
     }
 
-    public function findEmployeByKeyWords(Request $request, $keyWords)  {
+    public function findEmployeByKeyWords($keyWords)  {
         $profils = DB::select('select * from employes where competences like ?', ["%$keyWords%"]);
         if(is_null($profils) || sizeof($profils) == 0) {
             return response()->json(["message" => "Aucun profil trouvé"], 404);
@@ -245,7 +249,7 @@ class EmployerController extends Controller
         return response()->json($profils, 200);
     }
 
-    public function getUserEmail(Request $request, $id) {
+    public function getUserEmail($id) {
         $employer = DB::table('users')->where('id', $id)->first();
         if(is_null($employer)) {
             return response()->json(["message" => "Aucune adresse mail trouvé avec cet identifiant d'utilisateur", "status" => "404"], 404);
@@ -253,7 +257,7 @@ class EmployerController extends Controller
         return response()->json($employer->email, 200);
     }
 
-    public function downloadCvByEmployeID(Request $request, $id) {
+    public function downloadCvByEmployeID($id) {
         $employer = EmployerModel::find($id);
         if(is_null($employer)) {
             return response()->json(["message" => "Aucune cv trouvé avec cet identifiant d'employé", "status" => "404"], 404);
@@ -269,6 +273,9 @@ class EmployerController extends Controller
 		$recommandationOffres = new stdClass();
         $employer = new \stdClass();
         $user = $this->getEmployerByID($id)->getData();
+        if(isset($user->message)) {
+            return response()->json(["message" => "erreur sur l'id de l'utilisateur envoyé", "status"=>"500"], 500);
+        }
         $employer->nom = $user->nom;
         $employer->id = $user->id;
         $EmpCompetences = (new utilController)->makeCompetenceArrayFromString($user->competences);
@@ -369,7 +376,6 @@ class EmployerController extends Controller
                     $secondRecommandation[$s] = response()->json($result)->getData();
                     $s++;
                 }
-                $i++;
                 $fullL++;
                 $lowL++;
             }

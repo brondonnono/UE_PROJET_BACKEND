@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "62b13a828dadaaf7f45ea3f87e729bbb",
+    "content-hash": "9bd57fedf74f58e8fdfa6c391bba7a2a",
     "packages": [
         {
             "name": "brick/math",
@@ -1657,6 +1657,104 @@
             "time": "2021-11-21T11:48:40+00:00"
         },
         {
+            "name": "malico/laravel-mesomb",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yondifon/laravel-mesomb.git",
+                "reference": "0175c1a326910b056a26425c07457fc33b040508"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yondifon/laravel-mesomb/zipball/0175c1a326910b056a26425c07457fc33b040508",
+                "reference": "0175c1a326910b056a26425c07457fc33b040508",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5|^7.0|^8.0|^9.0",
+                "illuminate/database": "~5.7|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "~5.7|^6.0|^7.0|^8.0|^9.0",
+                "malico/mobile-cm-php": "^1.2",
+                "php": "^7.2.5|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.1",
+                "orchestra/testbench": "^7.0",
+                "pestphp/pest": "^1.19",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "spatie/ray": "^1.30"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Malico\\MeSomb\\MeSombServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Malico\\MeSomb\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Malico",
+                    "email": "hi@malico.me"
+                }
+            ],
+            "description": "A laravel wrapper on top of Mesomb Payment API",
+            "support": {
+                "issues": "https://github.com/yondifon/laravel-mesomb/issues",
+                "source": "https://github.com/yondifon/laravel-mesomb/tree/1.4.0"
+            },
+            "time": "2022-02-09T14:47:35+00:00"
+        },
+        {
+            "name": "malico/mobile-cm-php",
+            "version": "1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yondifon/mobile-cm-php.git",
+                "reference": "bbc63606f0ab02ed687e94d429c17e8968487737"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yondifon/mobile-cm-php/zipball/bbc63606f0ab02ed687e94d429c17e8968487737",
+                "reference": "bbc63606f0ab02ed687e94d429c17e8968487737",
+                "shasum": ""
+            },
+            "require-dev": {
+                "pestphp/pest": "1.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Malico\\MobileCM\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Malico",
+                    "email": "hi@malico.me"
+                }
+            ],
+            "description": "Get Telephone number's Mobile Network",
+            "support": {
+                "issues": "https://github.com/yondifon/mobile-cm-php/issues",
+                "source": "https://github.com/yondifon/mobile-cm-php/tree/1.3.1"
+            },
+            "time": "2021-09-07T11:43:10+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "2.4.0",
             "source": {
@@ -2787,6 +2885,70 @@
                 }
             ],
             "time": "2021-09-25T23:10:38+00:00"
+        },
+        {
+            "name": "srmklive/paypal",
+            "version": "3.0.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/srmklive/laravel-paypal.git",
+                "reference": "d9ad3ef9b27299788b4896aab8beeea40b24deca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/srmklive/laravel-paypal/zipball/d9ad3ef9b27299788b4896aab8beeea40b24deca",
+                "reference": "d9ad3ef9b27299788b4896aab8beeea40b24deca",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~7.0",
+                "illuminate/support": "~6.0|~7.0|~8.0|~9.0",
+                "nesbot/carbon": "~2.0",
+                "php": ">=7.2|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0|^9.0",
+                "symfony/var-dumper": "~5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Srmklive\\PayPal\\Providers\\PayPalServiceProvider"
+                    ],
+                    "aliases": {
+                        "PayPal": "Srmklive\\PayPal\\Facades\\PayPal"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Srmklive\\PayPal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raza Mehdi",
+                    "email": "srmk@outlook.com"
+                }
+            ],
+            "description": "Laravel plugin For Processing Payments Through Paypal Express Checkout. Can Be Used Independently With Other Applications.",
+            "keywords": [
+                "http",
+                "laravel paypal",
+                "paypal",
+                "rest",
+                "web service"
+            ],
+            "support": {
+                "issues": "https://github.com/srmklive/laravel-paypal/issues",
+                "source": "https://github.com/srmklive/laravel-paypal/tree/3.0.15"
+            },
+            "time": "2022-05-06T06:00:49+00:00"
         },
         {
             "name": "symfony/console",
