@@ -5,6 +5,7 @@ namespace App\Http\Controllers\payment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Malico\MeSomb\Payment;
+use Tchdev\Monetbil\Facades\Monetbil;
 
 class paymentController extends Controller
 {
@@ -58,5 +59,30 @@ class paymentController extends Controller
 
     public function testPayment($data) {
         
+    }
+
+
+    public function monetBilPaymentFunction_() {
+
+        // Setup Monetbil arguments
+        $monetbil_args = array(
+            'amount' => 10,
+            'phone' => '+237655429550',
+            'locale' => 'en', // Display language fr or en
+            'country' => '',
+            'currency' => 'XAF',
+            'item_ref' => '1',
+            'payment_ref' => md5(uniqid()),
+            'user' => 1,
+            'first_name' => 'NONO',
+            'last_name' => 'BRONDON',
+            'email' => 'brondonnono3@email.com',
+            'return_url' => '',
+            'notify_url' => '',
+            'logo' => ''
+        );
+
+        // This example show payment url
+        return Monetbil::url($monetbil_args);
     }
 }
