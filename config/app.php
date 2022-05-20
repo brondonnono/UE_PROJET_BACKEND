@@ -163,6 +163,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
+        Tchdev\Monetbil\MonetbilServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -191,7 +193,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Monetbil' => Tchdev\Monetbil\Facades\Monetbil::class,
     ])->toArray(),
 
 ];

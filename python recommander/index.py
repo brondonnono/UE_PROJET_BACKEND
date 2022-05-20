@@ -1,13 +1,25 @@
 from flask import Flask, json, request, jsonify
+from flask_cors import CORS,  cross_origin
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, ressources={r"/getRecommendedOfferForUser": {"origins": "http://localhost:4200", "methods":["GET","POST"]}})
 
-@app.route("/", methods=['GET'])
+
+
+def options (self):
+    return {'Allow' : 'GET' }, 200, \
+    { 'Access-Control-Allow-Origin': '*', \
+      'Access-Control-Allow-Methods' : 'POST,GET' }
+
+@app.route("/hello", methods=['GET'])
 def hello_world():
     return "Hello, World!"
 
-@app.route("/getOffer", methods=['GET'])
-def getOffer():
+@app.route("/getRecommendedOfferForUser", methods=['GET'])
+@cross_origin(origin='https://localhost:4200',headers=['Content-Type','Authorization'])
+def getRecommendedOfferForUser():
     # offers, employee
     offers = {
         1 : [
@@ -95,3 +107,6 @@ def getOffer():
         return jsonify(error)
     else:
         return jsonify(recommandationOffers)
+
+if __name__ == '__main__':
+   app.run(port=5000, debug=True)
