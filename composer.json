@@ -6,13 +6,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "bmatovu/laravel-mtn-momo": "^4.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "malico/laravel-mesomb": "^1.4",
+        "pear/http_request2": "^2.5",
         "propaganistas/laravel-phone": "^4.3",
+        "sevengps/payunit": "^1.0",
         "srmklive/paypal": "^3.0",
         "tchdev/monetbil": "^1.0"
     },

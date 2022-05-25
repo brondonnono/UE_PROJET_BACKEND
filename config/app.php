@@ -165,6 +165,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Propaganistas\LaravelPhone\PhoneServiceProvider::class,
         Tchdev\Monetbil\MonetbilServiceProvider::class,
+        Bmatovu\MtnMomo\MtnMomoServiceProvider::class,
 
         /*
          * Package Service Providers...

@@ -178,7 +178,7 @@ class EmployeurController extends Controller
 		$recommandationProfils->OtherUsers = $otherUsers;
 		
 		if (sizeof($topUsers)==0 && sizeof($otherUsers)==0) {
-			return response()->json(["message" => "Pour le moment aucun profil ne concorde avec cette offre", "matchRate" => $matchRate], 404);
+			return response()->json(["message" => "Pour le moment aucun profil ne concorde avec cette offre", "matchRate" => $matchRate], 200);
         }
         return $recommandationProfils;
     }

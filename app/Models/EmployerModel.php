@@ -16,6 +16,7 @@ class EmployerModel extends Model
         'nom',
         'sexe',
         'DateNais',
+        'tel',
         'formations',
         'competences',
         'villeResidence',

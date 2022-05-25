@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Malico\MeSomb\Payment;
 use Tchdev\Monetbil\Facades\Monetbil;
+use SevenGps\PayUnit;
+use \stdClass;
 
 class paymentController extends Controller
 {
@@ -57,10 +59,14 @@ class paymentController extends Controller
         // get Transactions details $payment->transactions
     }
 
-    public function testPayment($data) {
+    public function performPayement(Request $request) {
         
     }
 
+    
+    public function testPayment($data) {
+        
+    }
 
     public function monetBilPaymentFunction_() {
 
@@ -84,5 +90,75 @@ class paymentController extends Controller
 
         // This example show payment url
         return Monetbil::url($monetbil_args);
+    }
+
+    public function payUnit(Request $request, $mode) {
+        $transactionId = uniqid();
+        $amount = $request->input('amount');
+        $description = "Test description";
+        $sandbox = new stdClass();
+        $sandbox->secretApi = "2dd3ef2d-3420-4df9-bc84-55b6f1d2bbf2";
+        $sandbox->apiUsername = "payunit_sand_qNFWvhdsE";
+        $sandbox->apiKey = "7c5641015a61a4b67625f01c5f312203e9d7d826";
+        
+        $myPayment = new PayUnit(
+            "api_key",
+            "api_password",
+            "api_username",
+            "returnUrl",
+            "notifyUrl",
+            $mode,
+            $description,
+            "",
+            "XAF",
+            "name",
+            $transactionId
+        );
+        $myPayment->makePayment("total_amount");
+       # Configuration 
+
+    #To Test Visa/Master Card in the Sandbox environment use the following information :
+     #   Card Number: 4242 4224 2424 2424 or 2223 0000 4840 0011
+
+    #To test PayPal in the Sandbox environment use the following credential :
+     #   Email: sb-hf17g4673731@business.example.com
+      #  password: ehQ5_)dA 
+    }
+
+    public function momoPayment(Request $r) {
+        $request = new Http_Request2('https://sandbox.momodeveloper.mtn.com/collection/v1_0/bc-authorize');
+        $url = $request->getUrl();
+        
+        $headers = array(
+            // Request headers
+            'Authorization' => $r->,
+            'X-Target-Environment' => '',
+            'X-Callback-Url' => '',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key' => '{subscription key}',
+        );
+        
+        $request->setHeader($headers);
+        
+        $parameters = array(
+            // Request parameters
+        );
+        
+        $url->setQueryVariables($parameters);
+        
+        $request->setMethod(HTTP_Request2::METHOD_POST);
+        
+        // Request body
+        $request->setBody("{body}");
+        
+        try
+        {
+            $response = $request->send();
+            echo $response->getBody();
+        }
+        catch (HttpException $ex)
+        {
+            echo $ex;
+        }
     }
 }
