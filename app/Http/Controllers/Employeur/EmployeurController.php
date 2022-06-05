@@ -182,4 +182,20 @@ class EmployeurController extends Controller
         }
         return $recommandationProfils;
     }
+
+     /**
+     * Display the number of offers for the specified employeur_id
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function countOffersByEmployerId($id) {
+        $offers = (new OffreController)->getOffresByEmployeurId($id)->getData();
+        if(isset($offers)) {
+            return response()->json(["size" => sizeof($offers)], 200);
+        } else {
+            return response()->json(["error" => "id incorrect"], 404);
+        }
+        
+    }
 }
