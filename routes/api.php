@@ -11,6 +11,7 @@ use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Employeur\EmployeurController;
 use App\Http\Controllers\OfferPostulatedController;
 use App\Http\Controllers\OfferRejectedController;
+use App\Http\Controllers\payment\PaymentController;
 
 
 /*
@@ -80,6 +81,7 @@ Route::get('getEmployeurByID/{id}', [EmployeurController::class, 'getEmployeurBy
 Route::post('createEmployeur', [EmployeurController::class, 'createEmployeur']);
 Route::put('updateEmployeur/{id}', [EmployeurController::class, 'updateEmployeur']);
 Route::delete('deleteEmployeur/{id}', [EmployeurController::class, 'deleteEmployeur']);
+Route::get('countOffersByEmployerId/{id}', [EmployeurController::class, 'countOffersByEmployerId']);
 
 //offres routes
 Route::get('getOffres', [OffreController::class, 'getOffres']);
@@ -96,3 +98,8 @@ Route::get('downloadCV/{id}', [CvController::class, 'download']);
 Route::post('uploadCv', [CvController::class, 'upload']);
 Route::get('downloadImg', [CvController::class, 'downloadImg']);
 Route::post('uploadImg', [CvController::class, 'uploadImg']);
+
+//file Routes
+Route::post('momoPayment', [PaymentController::class, 'momoPayment']);
+Route::post('paypalPayment', [PaymentController::class, 'momoPayment']);
+Route::post('cardPayment', [PaymentController::class, 'momoPayment']);

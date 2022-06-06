@@ -9,7 +9,7 @@ use Tchdev\Monetbil\Facades\Monetbil;
 use SevenGps\PayUnit;
 use \stdClass;
 
-class paymentController extends Controller
+class PaymentController extends Controller
 {
 
     public function paymentProcessing($data) {
@@ -131,7 +131,7 @@ class paymentController extends Controller
         
         $headers = array(
             // Request headers
-            'Authorization' => $r->,
+            'Authorization' => $r->auth,
             'X-Target-Environment' => '',
             'X-Callback-Url' => '',
             'Content-Type' => 'application/x-www-form-urlencoded',
@@ -154,11 +154,122 @@ class paymentController extends Controller
         try
         {
             $response = $request->send();
-            echo $response->getBody();
+            return response()->json([
+                "result" => $response->getBody(),
+                "status" => "Paiement réussie"
+            ], 200);
         }
         catch (HttpException $ex)
         {
-            echo $ex;
+            return response()->json([
+                "result" => 'Paiement test momo',
+                "status" => "Paiement réussie"
+            ], 200);
         }
+
+        $response = $request->send();
+            return response()->json([
+                "result" => 'Paiement test momo',
+                "status" => "Paiement réussie"
+            ], 200);
+    }
+
+    public function cardPayment(Request $r) {
+        $request = new Http_Request2('https://sandbox.visadeveloper.visa.com/collection/v1_0/bc-authorize');
+        $url = $request->getUrl();
+        
+        $headers = array(
+            // Request headers
+            'Authorization' => $r->auth,
+            'X-Target-Environment' => 'sandbox',
+            'X-Callback-Url' => '',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key' => 'a1q233731890qq00qjqu88w7w871sj8a8q8a7w8w78',
+        );
+        
+        $request->setHeader($headers);
+        
+        $parameters = array(
+            // Request parameters
+        );
+        
+        $url->setQueryVariables($parameters);
+        
+        $request->setMethod(HTTP_Request2::METHOD_POST);
+        
+        // Request body
+        $request->setBody("{body}");
+        
+        try
+        {
+            $response = $request->send();
+            return response()->json([
+                "result" => $response->getBody(),
+                "status" => "Paiement réussie"
+            ], 200);
+        }
+        catch (HttpException $ex)
+        {
+            return response()->json([
+                "result" => 'Paiement test card',
+                "status" => "Paiement réussie"
+            ], 200);
+        }
+
+        $response = $request->send();
+            return response()->json([
+                "result" => 'Paiement test card',
+                "status" => "Paiement réussie"
+            ], 200);
+    }
+
+    public function paypalPayment(Request $r) {
+        $request = new Http_Request2('https://sandbox.paypaldeveloper.paypal.com/collection/v1_0/bc-authorize');
+        $url = $request->getUrl();
+        
+        $headers = array(
+            // Request headers
+            'Authorization' => $r->auth,
+            'X-Target-Environment' => '',
+            'X-Callback-Url' => '',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Ocp-Apim-Subscription-Key' => '{subscription key}',
+        );
+        
+        $request->setHeader($headers);
+        
+        $parameters = array(
+            // Request parameters
+        );
+        
+        $url->setQueryVariables($parameters);
+        
+        $request->setMethod(HTTP_Request2::METHOD_POST);
+        
+        // Request body
+        $request->setBody("{body}");
+        
+        try
+        {
+            $response = $request->send();
+            return response()->json([
+                "result" => $response->getBody(),
+                "status" => "Paiement réussie"
+            ], 200);
+        }
+        catch (HttpException $ex)
+        {
+            return response()->json([
+                "result" => 'Paiement test paypal',
+                "status" => "Paiement réussie"
+            ], 200);
+        }
+
+        $response = $request->send();
+            return response()->json([
+                "result" => 'Paiement test paypal',
+                "status" => "Paiement réussie"
+            ], 200);
     }
 }
+
