@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Malico\MeSomb\Payment;
 use Tchdev\Monetbil\Facades\Monetbil;
+use Bmatovu\MtnMomo\Products\Collection;
+use Bmatovu\MtnMomo\Exceptions\CollectionRequestException;
 use SevenGps\PayUnit;
 use \stdClass;
 
@@ -60,12 +62,21 @@ class PaymentController extends Controller
     }
 
     public function performPayement(Request $request) {
-        
+        $apiKey = "85bfa505a4ef4167b3d61f5d4cb198e9";
+        try {
+            $collection = new Collection();
+            $token = $collection->getToken();
+            $momoTransactionId = $collection->requestToPay($apiKey, $request->phone, $request->amount);
+        } catch(CollectionRequestException $e) {
+            do {
+                return response()->json(['error' =>'Erreur survenue lors de la transaction'], 400);
+            } while($e = $e->getPrevious());
+        }
     }
 
     
     public function testPayment($data) {
-        
+
     }
 
     public function monetBilPaymentFunction_() {
@@ -102,9 +113,9 @@ class PaymentController extends Controller
         $sandbox->apiKey = "7c5641015a61a4b67625f01c5f312203e9d7d826";
         
         $myPayment = new PayUnit(
-            "api_key",
-            "api_password",
-            "api_username",
+            $sandbox->apiKey,
+            $sandbox->secretApi,
+            $sandbox->apiUsername,
             "returnUrl",
             "notifyUrl",
             $mode,
@@ -272,4 +283,3 @@ class PaymentController extends Controller
             ], 200);
     }
 }
-
