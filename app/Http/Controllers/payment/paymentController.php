@@ -74,10 +74,7 @@ class PaymentController extends Controller
         }
     }
 
-    
-    public function testPayment($data) {
-
-    }
+    public function testPayment($data) { }
 
     public function monetBilPaymentFunction_() {
 
