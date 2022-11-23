@@ -9,7 +9,9 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Employeur\EmployeurController;
+use App\Http\Controllers\OfferPostulatedController;
 use App\Http\Controllers\OfferRejectedController;
+use App\Http\Controllers\payment\PaymentController;
 
 
 /*
@@ -29,10 +31,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
-
 Route::post('password/forgot', [ForgotPasswordController::class, 'forgotPassword']);
-
-
 Route::post('password/reset', [ResetPasswordController::class, 'sendResetResponse']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -42,14 +41,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //recommandation routes
 Route::get('getRecommandedOffres/{id}', [EmployerController::class, 'getRecommandedOffresForUser']);
+Route::get('getRecommandedOffresWithExperience/{id}', [EmployerController::class, 'getRecommandedOffresForUserWithExperience']);
+
 
 //employers routes
 Route::get('getEmployers', [EmployerController::class, 'getEmployers']);
+Route::get('getUserEmail/{id}', [EmployerController::class, 'getUserEmail']);
 Route::get('getEmployerByUserId/{id}', [EmployerController::class, 'getEmployerByUserID']);
 Route::get('getEmployerByID/{id}', [EmployerController::class, 'getEmployerByID']);
 Route::post('createEmployer', [EmployerController::class, 'createEmployer']);
 Route::put('updateEmployer/{id}', [EmployerController::class, 'updateEmployer']);
 Route::delete('deleteEmployer/{id}', [EmployerController::class, 'deleteEmployer']);
+Route::get('downloadCvByEmployeID/{id}', [EmployerController::class, 'downloadCvByEmployeID']);
+
 
 //candidate routes
 Route::post('createCandidate', [EmployerController::class, 'createCandidate']);
@@ -57,12 +61,16 @@ Route::get('getCandidateByID/{id}', [EmployerController::class, 'getCandidateByI
 Route::get('getCandidateByOffreID/{id}', [EmployerController::class, 'getCandidateByOffreID']);
 Route::get('getCandidates', [EmployerController::class, 'getCandidates']);
 Route::delete('deleteCandidate/{id}', [EmployerController::class, 'deleteCandidate']);
+Route::post('validateCandidate', [EmployerController::class, 'validateCandidate']);
 
 //offerRejected routes
 Route::post('createOfferRejected', [OfferRejectedController::class, 'createOfferRejected']);
 Route::get('getOfferRejectedByID/{id}', [OfferRejectedController::class, 'getOfferRejectedByID']);
+Route::get('getOfferPostulatedByID/{id}', [OfferPostulatedController::class, 'getOfferPostulatedByID']);
 Route::get('getOfferRejectedByEmployerID/{id}', [OfferRejectedController::class, 'getOfferRejectedByEmployerID']);
+Route::get('getOfferRPostulatedByEmployerID/{id}', [OfferPostulatedController::class, 'getOfferRPostulatedByEmployerID']);
 Route::get('getOffersRejected', [OfferRejectedController::class, 'getOffersRejected']);
+Route::get('getOfferPostulatedByEmployerID/{id}', [OfferPostulatedController::class, 'getOfferPostulatedByEmployerID']);
 Route::delete('deleteOfferRejected/{id}', [OfferRejectedController::class, 'deleteOfferRejected']);
 
 //employeurs routes
@@ -73,6 +81,7 @@ Route::get('getEmployeurByID/{id}', [EmployeurController::class, 'getEmployeurBy
 Route::post('createEmployeur', [EmployeurController::class, 'createEmployeur']);
 Route::put('updateEmployeur/{id}', [EmployeurController::class, 'updateEmployeur']);
 Route::delete('deleteEmployeur/{id}', [EmployeurController::class, 'deleteEmployeur']);
+Route::get('countOffersByEmployerId/{id}', [EmployeurController::class, 'countOffersByEmployerId']);
 
 //offres routes
 Route::get('getOffres', [OffreController::class, 'getOffres']);
@@ -81,10 +90,16 @@ Route::get('getOffresByEmployeurId/{id}', [OffreController::class, 'getOffresByE
 Route::post('createOffre', [OffreController::class, 'createOffre']);
 Route::post('updateOffre/{id}', [OffreController::class, 'updateOffre']);
 Route::delete('deleteOffre/{id}', [OffreController::class, 'deleteOffre']);
-
+Route::get('findOffersByKeyWords/{keyWords}', [EmployerController::class, 'findOffersByKeyWords']);
+Route::get('findEmployeByKeyWords/{keyWords}', [EmployerController::class, 'findEmployeByKeyWords']);
 
 //file Routes
-Route::get('cv/download', [CvController::class, 'download']);
-Route::post('cv/upload', [CvController::class, 'upload']);
+Route::get('downloadCV/{id}', [CvController::class, 'download']);
+Route::post('uploadCv', [CvController::class, 'upload']);
 Route::get('downloadImg', [CvController::class, 'downloadImg']);
 Route::post('uploadImg', [CvController::class, 'uploadImg']);
+
+//file Routes
+Route::post('momoPayment', [PaymentController::class, 'momoPayment']);
+Route::post('paypalPayment', [PaymentController::class, 'momoPayment']);
+Route::post('cardPayment', [PaymentController::class, 'momoPayment']);

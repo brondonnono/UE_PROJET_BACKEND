@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id', true)->unsigned();
             $table->integer('employe_id')->unsigned();
             $table->integer('offre_id')->unsigned();
+            $table->string('status');
             $table->timestamps();
             $table->foreign('employe_id')->references('id')->on('employes');
             $table->foreign('offre_id')->references('id')->on('offres');

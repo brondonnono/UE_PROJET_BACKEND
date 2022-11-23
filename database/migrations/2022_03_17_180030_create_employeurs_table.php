@@ -17,9 +17,12 @@ return new class extends Migration
             $table->increments('id', true)->unsigned();
             $table->integer('user_id')->unsigned();
             $table->string('nom');
+            $table->string('adresse');
             $table->text('description');
+            $table->string('email');
             $table->text('Secteur_activité');
             $table->string('ville');
+            $table->string('avatar');
             $table->timestamps();
         
             $table->engine = 'InnoDB';

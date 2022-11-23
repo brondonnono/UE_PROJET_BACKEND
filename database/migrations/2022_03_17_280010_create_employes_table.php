@@ -19,10 +19,12 @@ return new class extends Migration
             $table->string('nom');
             $table->char('sexe', 1);
             $table->timestamp('DateNais');
+            $table->string('tel', 50);
             $table->text('formations');
             $table->text('competences');
             $table->string('villeResidence');
             $table->string('cv');
+            $table->string('avatar');
             $table->timestamps();
         
             $table->engine = 'InnoDB';

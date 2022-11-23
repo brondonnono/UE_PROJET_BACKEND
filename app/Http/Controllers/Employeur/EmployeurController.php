@@ -43,8 +43,8 @@ class EmployeurController extends Controller
         $rules = [
             'Secteur_activité' => 'required',
             'user_id' => 'required',
-            'description' => 'required',
-            'ville' => 'required'
+            'adresse' => 'required',
+            'email' => 'required'
         ];
         $validator = Validator::make($request->all(), $rules);
         if($validator->fails()) {
@@ -66,6 +66,14 @@ class EmployeurController extends Controller
             return response()->json(["message" => "Aucun employeur trouvé avec cet identifiant"], 404);
         }
         return response()->json($employeur, 200);
+    }
+
+    public function internalGetEmployeurById($id) {
+        $employeur = EmployeurModel::find($id);
+        if(is_null($employeur)) {
+            return "Aucun employeur trouvé avec cet identifiant";
+        }
+        return $employeur;
     }
 
     /**
@@ -170,8 +178,24 @@ class EmployeurController extends Controller
 		$recommandationProfils->OtherUsers = $otherUsers;
 		
 		if (sizeof($topUsers)==0 && sizeof($otherUsers)==0) {
-			return response()->json(["message" => "Pour le moment aucun utilisateur ne concorde avec cette offre", "matchRate" => $matchRate], 404);
+			return response()->json(["message" => "Pour le moment aucun profil ne concorde avec cette offre", "matchRate" => $matchRate], 200);
         }
         return $recommandationProfils;
+    }
+
+     /**
+     * Display the number of offers for the specified employeur_id
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function countOffersByEmployerId($id) {
+        $offers = (new OffreController)->getOffresByEmployeurId($id)->getData();
+        if(isset($offers)) {
+            return response()->json(["size" => sizeof($offers)], 200);
+        } else {
+            return response()->json(["error" => "id incorrect"], 404);
+        }
+        
     }
 }

@@ -30,9 +30,12 @@ class OfferRejectedController extends Controller
     }
 
     public function getOfferRejectedByEmployerID($id) {
-        $offerRejected = DB::table('offerRejected')->where('employe_id', $id)->get();
-        if(is_null($offerRejected) || sizeof($offerRejected)==0) {
+        $offerRejected = DB::table('offerrejected')->where('employe_id', $id)->get();
+        if(is_null($offerRejected)) {
             return response()->json(["message" => "Aucune offre rejetée par cet employé", "status" => "404"], 404);
+        }
+        if (sizeof($offerRejected)==0) {
+            return response()->json(["message" => "Aucune offre rejetée par cet employé", "status" => "404"], 200);
         }
         $response = response()->json($offerRejected, 200);
         $result = $response->getData(false, 512);

@@ -14,8 +14,9 @@ class EmployeurModel extends Model
     protected $fillable = [
         'user_id',
         'nom',
-        'description',
+        'adresse',
+        'email',
         'Secteur_activité',
-        'ville'
+        'avatar',
     ];
 }
